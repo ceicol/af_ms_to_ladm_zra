@@ -1,6 +1,7 @@
+{% set process_id = dag_run.conf.get('process_id', params.process_id) %}
 SET search_path TO
-    input_{{ dag_run.conf.get('process_id', params.process_id) }}, -- Schema modelo simplificado
-    output_{{ dag_run.conf.get('process_id', params.process_id) }}, -- schema modelo LADM extendido
+    input_{{ process_id }}, -- Schema modelo simplificado
+    output_{{ process_id }}, -- schema modelo LADM extendido
     public;
 
 --========================================================================
@@ -13,7 +14,7 @@ insert into col_areavalor (
     zra_ue_zonarecargcfero_area
 )
 select
-    (select t_id from output_{{ dag_run.conf.get('process_id', params.process_id) }}.t_ili2db_basket where topic = 'LADM_COL_v_1_0_0_Ext_ZRA.ZRA' limit 1) as t_basket,
+    (select t_id from output_{{ process_id }}.t_ili2db_basket where topic = 'LADM_COL_v_1_0_0_Ext_ZRA.ZRA' limit 1) as t_basket,
     'Area_Grafica' as tipo,
     area_ha * 10000 as area,
     t_id as zra_ue_zonarecargcfero_area
